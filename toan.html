@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập Môn Toán</title>
+    <style>
+        :root {
+            --primary-color: #d00000; /* Math Color */
+            --light-primary: #fcebeb;
+            --secondary-color: #f8f9fa;
+            --text-color: #212529;
+            --light-text: #495057;
+            --border-color: #dee2e6;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --shadow-color: rgba(0,0,0,0.07);
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--secondary-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.6; }
+        .main-container { max-width: 960px; margin: 0 auto; }
+        .page-title { text-align: center; color: var(--primary-color); margin-bottom: 30px; font-weight: 700; }
+        #topics-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        a { text-decoration: none; }
+        .card { background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 15px var(--shadow-color); padding: 25px; text-align: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; width: 200px; display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--primary-color); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .card h3 { margin-top: 0; color: var(--primary-color); font-size: 1.1em; }
+        .card p { font-size: 0.9em; color: var(--light-text); margin-bottom: 0; }
+        .topic-view { background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 15px var(--shadow-color); overflow: hidden; margin-top: 20px; }
+        .header { background-color: var(--primary-color); color: white; padding: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 1.8em; }
+        .header p { margin: 5px 0 0; opacity: 0.9; }
+        .back-button { padding: 8px 15px; margin-bottom: 20px; cursor: pointer; border: 1px solid var(--border-color); background-color: white; border-radius: 5px; font-weight: 600; }
+        .back-button-link { text-decoration: none; color: inherit; }
+        .back-button:hover { background-color: #f1f1f1; }
+        .tab-system { display: flex; background-color: #e9ecef; }
+        .tab-button { padding: 15px 20px; cursor: pointer; border: none; background-color: transparent; font-size: 1em; font-weight: 600; color: #495057; flex-grow: 1; text-align: center; transition: background-color 0.3s, color 0.3s; }
+        .tab-button.active { background-color: #ffffff; color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
+        .tab-content { padding: 25px; display: none; }
+        .tab-content.active { display: block; }
+        .theory h3 { color: var(--primary-color); border-bottom: 2px solid #e0e0e0; padding-bottom: 5px; margin-top: 30px; }
+        .theory code { background-color: var(--light-primary); padding: 3px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: var(--primary-color); font-weight: bold;}
+        .theory table { border-collapse: collapse; width: 100%; margin-top: 20px; font-size: 0.9em; }
+        .theory th, .theory td { border: 1px solid var(--border-color); padding: 10px; text-align: left; }
+        .theory th { background-color: #f8f9fa; font-weight: 600; }
+        .question-block { margin-bottom: 25px; padding: 20px; border: 1px solid var(--border-color); border-radius: 8px; }
+        .question-block p.question-text { font-weight: 600; margin-top: 0; }
+        .options { list-style: none; padding: 0; margin: 0; }
+        .option { background-color: #f8f9fa; border: 1px solid var(--border-color); border-radius: 5px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+        .option.correct { background-color: #d4edda; border-color: var(--correct-color); color: #155724; font-weight: bold; }
+        .option.incorrect { background-color: #f8d7da; border-color: var(--incorrect-color); color: #721c24; }
+        .option.disabled { cursor: not-allowed; }
+        .option:not(.disabled):hover { background-color: #e9ecef; }
+        .explanation { margin-top: 15px; padding: 15px; background-color: var(--light-primary); border-left: 5px solid var(--primary-color); border-radius: 5px; font-size: 0.95em; display: none; }
+        .explanation.visible { display: block; }
+        .explanation strong { color: var(--primary-color); }
+        .answer-key ol { columns: 4; -webkit-columns: 4; -moz-columns: 4; list-style-position: inside; padding-left: 0; }
+        .answer-key li { padding: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="page-title">Môn Toán</h1>
+        <div id="navigation-container"></div>
+        <div id="topic-container"></div>
+    </div>
+
+<script>
+const khoDuLieu = {
+    "Toan": {
+        name: "Toán",
+        color: "#d00000",
+        topics: {
+            "NguyenHam": {
+                name: "Bài 1: Nguyên hàm",
+                lyThuyet: `<h3>Kiến thức trọng tâm</h3><ul><li><code>&int;xⁿ dx = (xⁿ⁺¹ / (n+1)) + C</code> (n&ne;-1)</li><li><code>&int;(1/x) dx = ln|x| + C</code></li><li><code>&int;aˣ dx = aˣ / ln(a) + C</code> (a>0, a&ne;1)</li><li><code>&int;sin(x) dx = -cos(x) + C</code></li><li><code>&int;cos(x) dx = sin(x) + C</code></li></ul><h3>Tính chất của nguyên hàm</h3><ul><li><code>&int;k&middot;f(x)dx = k&middot;&int;f(x)dx</code> (k&ne;0)</li><li><code>&int;[f(x) &pm; g(x)]dx = &int;f(x)dx &pm; &int;g(x)dx</code></li></ul>`,
+                tracNghiem: [
+                    { cauHoi: "Câu 1 (M1). Họ các nguyên hàm của hàm số f(x)=x⁹ là", dapAn: ["&int;x⁹dx = x¹⁰/10 + C.", "&int;x⁹dx = x⁹/10 + C.", "&int;x⁹dx = x⁹/9 + C.", "&int;x⁹dx = x¹¹/11 + C."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 2 (M1). Họ các nguyên hàm của hàm số f(x)=x²⁰²⁰ là", dapAn: ["&int;x²⁰²⁰dx = x²⁰²⁰/2021 + C.", "&int;x²⁰²⁰dx = x²⁰²¹/2021 + C.", "&int;x²⁰²⁰dx = x²⁰²⁰/2020 + C.", "&int;x²⁰²⁰dx = 2019x²⁰¹⁹+C."], dapAnDung: 1, giaiThich: "Đáp án: B" },
+                    { cauHoi: "Câu 3 (M1). Nguyên hàm của hàm số y=2ˣ là", dapAn: ["&int;2ˣdx=2ˣln2+C.", "&int;2ˣdx=2ˣ+C.", "&int;2ˣdx=x&middot;2ˣ+C.", "&int;2ˣdx=2ˣ/ln2+C."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 4 (M1). Nguyên hàm của hàm số y=13ˣ là", dapAn: ["&int;13ˣdx=x&middot;ln13/13ˣ+C.", "&int;13ˣdx=13ˣ&middot;ln13+C.", "&int;13ˣdx=13ˣ+C.", "&int;13ˣdx=13ˣ/ln13+C."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 5 (M1). Cho f(x), g(x) liên tục. Mệnh đề nào đúng?", dapAn: ["&int;[f(x)−g(x)]dx=&int;f(x)dx−&int;g(x)dx.", "&int;[2f(x)−g(x)]dx=&int;2f(x)dx+&int;g(x)dx.", "&int;[f(x)−3g(x)]dx=&int;f(x)dx−&int;g(x)dx.", "&int;[f(x)+5g(x)]dx=&int;f(x)dx+3&int;g(x)dx."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 6 (M1). Cho f(x), g(x) liên tục. Mệnh đề nào sai?", dapAn: ["&int;[f(x)+g(x)]dx=&int;f(x)dx+&int;g(x)dx.", "&int;[3f(x)−g(x)]dx=3&int;f(x)dx−&int;g(x)dx.", "&int;[f(x)−g(x)]dx=&int;f(x)dx−&int;g(x)dx.", "&int;[f(x)+5g(x)]dx=&int;f(x)dx−5&int;g(x)dx."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 7 (M2). Cho f(x) = 3x - 6sin(x). Khẳng định nào đúng?", dapAn: ["&int;f(x)dx = &frac34;x⁴−6cos(x)+C.", "&int;f(x)dx = &frac32;x²+6cos(x)+C.", "&int;f(x)dx = &frac23;x³−6cos(x)+C.", "&int;f(x)dx = −&frac13;x³−6cos(x)+C."], dapAnDung: 1, giaiThich: "Đáp án: B" },
+                    { cauHoi: "Câu 8 (M2). Cho f(x) = 5cos(x)+4x. Khẳng định nào đúng?", dapAn: ["&int;f(x)dx=−5sin(x)−2x²+C.", "&int;f(x)dx=−5sin(x)+2x²+C.", "&int;f(x)dx=5sin(x)+2x²+C.", "&int;f(x)dx=5cos(x)+2x²+C."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 9 (M2). Nguyên hàm F(x) của f(x)=3x²+5 thỏa mãn F(1)=2 là", dapAn: ["x³+5x−4.", "x³+5x.", "x³/3+5x+2.", "x³/3−5x+2."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 10 (M2). Nguyên hàm F(x) của f(x)=6x²−5 thoả mãn F(2)=4 là", dapAn: ["12x².", "x³−3x+8.", "3x−x²/2.", "2x³−5x−2."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 11 (M3). v(t)=150−9,8t. Độ cao lớn nhất là?", dapAn: ["1147,96 (m)", "1417,69 (m)", "1417,96 (m)", "1147,69 (m)"], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 12 (M3). v(t)=220−9,8t. Độ cao lớn nhất là?", dapAn: ["4269,39 (m)", "2469,39 (m)", "2649,39 (m)", "2469,39 (m)"], dapAnDung: 1, giaiThich: "Đáp án: B" }
+                ]
+            },
+            "TichPhan": {
+                name: "Bài 2: Tích phân",
+                lyThuyet: `<h3>Định nghĩa</h3><p><code>&int;ₐᵇ f(x)dx = F(b) - F(a)</code>, với F(x) là một nguyên hàm của f(x).</p><h3>Tính chất</h3><ul><li><code>&int;ₐᵇ k&middot;f(x)dx = k&middot;&int;ₐᵇ f(x)dx</code></li><li><code>&int;ₐᵇ [f(x) &pm; g(x)]dx = &int;ₐᵇ f(x)dx &pm; &int;ₐᵇ g(x)dx</code></li></ul>`,
+                tracNghiem: [
+                    { cauHoi: "Câu 13. Cho F(x) là nguyên hàm của f(x). Khi đó F(5)−F(2) là:", dapAn: ["&int;₂⁵ F(x)dx.", "&int;₅² F(x)dx.", "&int;₅² f(x)dx.", "&int;₂⁵ f(x)dx."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 14. Cho F(x) là nguyên hàm của f(x). Khi đó F(3)−F(−1) là:", dapAn: ["&int;₋₁³ F(x)dx.", "−&int;₃⁻¹ F(x)dx.", "&int;₃⁻¹ f(x)dx.", "&int;₋₁³ f(x)dx."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 15. Tích phân I=&int;₀³(4x+5)dx bằng:", dapAn: ["I=30.", "I=31.", "I=32.", "I=33."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 16. Tích phân K=&int;₋₃²(−4x+2)dx bằng:", dapAn: ["K=−20.", "K=10.", "K=20.", "K=−8."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 17. Nếu &int;₀¹f(x)dx=3 và &int;₀¹g(x)dx=−5 thì I=&int;₀¹[f(x)+g(x)]dx bằng:", dapAn: ["I=−3.", "I=2.", "I=−2.", "I=3."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 18. Nếu &int;₋₁²f(x)dx=33 và &int;₋₁²g(x)dx=8 thì I=&int;₋₁²[f(x)−g(x)]dx bằng:", dapAn: ["I=25.", "I=41.", "I=30.", "I=−25."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 19. Cho a thỏa mãn &int;₁²(3−ax)dx=−3. Khi đó, a bằng:", dapAn: ["3.", "9.", "4.", "2."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 20. Cho a thỏa mãn &int;₀²(x−2a)dx=−6. Khi đó, a bằng:", dapAn: ["5.", "4.", "3.", "2."], dapAnDung: 1, giaiThich: "Đáp án: B" },
+                    { cauHoi: "Câu 21. Ô tô có v(t)=20+at, dừng sau 4s. Quãng đường đi được là?", dapAn: ["20 (m).", "30 (m).", "40 (m).", "50 (m)."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 22. Ô tô có v(t)=48+at, dừng sau 8s. Quãng đường đi được là?", dapAn: ["180 (m).", "162 (m).", "192 (m).", "129 (m)."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 23. P₁(t)=50+t², P₂(t)=100+5t. Lợi nhuận vượt thực tế gần nhất?", dapAn: ["41670 đô la.", "42670 đô la.", "42760 đô la.", "41760 đô la."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 24. P₁(t)=60+t², P₂(t)=126+4t. Lợi nhuận vượt thực tế gần nhất?", dapAn: ["57277 đô la.", "52777 đô la.", "57772 đô la.", "52770 đô la."], dapAnDung: 1, giaiThich: "Đáp án: B" }
+                ]
+            },
+            "UngDungTichPhan": {
+                name: "Bài 3: Ứng dụng Tích phân",
+                lyThuyet: `<h3>Diện tích hình phẳng</h3><p>Giới hạn bởi y=f(x), y=g(x), x=a, x=b là <code>S = &int;ₐᵇ |f(x)−g(x)|dx</code>.</p><h3>Thể tích khối tròn xoay</h3><p>Hình phẳng giới hạn bởi y=f(x), trục hoành, x=a, x=b quay quanh Ox có thể tích là <code>V = &pi;&int;ₐᵇ f²(x)dx</code>.</p>`,
+                tracNghiem: [
+                    { cauHoi: "Câu 25. Diện tích S giới hạn bởi y=x+3, Ox, x=2, x=3 là:", dapAn: ["S=&int;₂³|x+3|dx.", "S=&int;₂³(x+3)dx.", "S=&int;₂⁶|x+3|dx.", "S=&int;₂⁶(x+3)dx."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 26. Diện tích S giới hạn bởi y=−3x+8, Ox, x=−2, x=5 là:", dapAn: ["S=&pi;&int;₋₂⁵(−3x+8)²dx.", "S=&int;₋₂⁵(−3x+8)dx.", "S=&int;₅⁻²(−3x+8)dx.", "S=&int;₋₂⁵|−3x+8|dx."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 27. Thể tích V khi quay hình giới hạn bởi y=x+2, Ox, x=2, x=3 quanh Ox là:", dapAn: ["V=&pi;&int;₂³(x+2)dx.", "V=&int;₂³(x+2)²dx.", "V=&int;₂³(x+2)dx.", "V=&pi;&int;₂³(x+2)²dx."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 28. Thể tích V khi quay hình giới hạn bởi y=x+5, Ox, x=2, x=6 quanh Ox là:", dapAn: ["V=&int;₂⁶(x+5)dx.", "V=&int;₂⁶(x+5)²dx.", "V=&pi;&int;₂⁶(x+5)²dx.", "V=&pi;&int;₂⁶(x+5)dx."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 29. Diện tích S giới hạn bởi y=x²−2x, y=2x−3, x=1, x=2 là:", dapAn: ["S=2/3.", "S=3/2.", "S=3/5.", "S=5/3."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 30. Diện tích S giới hạn bởi y=2x²−3x, y=x−5, x=2, x=4 là:", dapAn: ["S=70/3", "S=79/3", "S=69/2", "S=75/2"], dapAnDung: 1, giaiThich: "Đáp án: B" },
+                    { cauHoi: "Câu 31. Thùng rượu parabol cao 100cm, r(giữa)=40, r(trên)=30. Thể tích max?", dapAn: ["284,32 (lít).", "425,16 (lít).", "212,16 (lít).", "142,23 (lít)."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 32. Thùng rượu parabol cao 140cm, r(giữa)=60, r(trên)=50. Thể tích max?", dapAn: ["1614,23 (lít).", "1146,23 (lít).", "1164,23 (lít).", "1416,23 (lít)."], dapAnDung: 1, giaiThich: "Đáp án: B" }
+                ]
+             },
+            "PhuongTrinhMatPhang": {
+                name: "Bài 15: PT Mặt phẳng",
+                lyThuyet: `<ul><li>PT tổng quát: <code>Ax+By+Cz+D=0</code> (A²+B²+C² &ne; 0)</li><li>Vectơ pháp tuyến (VTPT): <code><b>n</b>&rarr;=(A;B;C)</code></li><li>Mặt phẳng qua M(x₀,y₀,z₀) có VTPT <b>n</b>&rarr;=(A,B,C) là: <code>A(x-x₀)+B(y-y₀)+C(z-z₀)=0</code></li></ul>`,
+                tracNghiem: [
+                    { cauHoi: "Câu 33. PT nào là PT TQ của một mặt phẳng?", dapAn: ["2x−3y+4z−1=0.", "2x³+4xy²=0.", "5y⁵−6xy²+2=0.", "5x⁴−3xy³−8=0."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 34. VTPT của (P): 3x+5y−2z+6=0 là:", dapAn: ["(4;6;3).", "(−5;3;6).", "(3;5;−2).", "(5;−2;6)."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 35. (a) có VTPT n→=(−1;2;4). Vecto nào cũng là VTPT của (a)?", dapAn: ["(−2;4;8).", "(−2;4;6).", "(−2;4;5).", "(−2;4;9)."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 36. Điểm nào thuộc (P): 4x+2y−3z−1=0?", dapAn: ["E(1;0;4).", "N(1;0;2).", "F(1;0;3).", "M(1;0;1)."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                    { cauHoi: "Câu 37. Mp qua A(2;-3;2) và song song (P):2x+3y-4z+1=0 là:", dapAn: ["2x+3y−4z+13=0.", "2x+3y−4z−13=0.", "2x+y−3z−13=0.", "2x+y−3z+13=0."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 38. Cho u→=(1;4;2) và v→=(2;2;3). [u→,v→] bằng:", dapAn: ["(8;1;−6).", "(8;1;6).", "(9;−1;6).", "(5;1;−6)."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 39. PT mặt phẳng (ABC) với A(2;1;-1), B(3;2;1), C(3;1;4) là:", dapAn: ["5x−3y−z−8=0.", "5x−3y−z+8=0.", "5x−3y+z+6=0.", "5x−3y+z−6=0."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 40. Mp qua M(1;-1;5) và ⊥ (P):3x+2y-z=0, (Q):x+y-z+2=0 là:", dapAn: ["−x+2y+z−2=0.", "−x+2y+z+2=0.", "x+3y−z+7=0.", "2x+y−z+4=0."], dapAnDung: 0, giaiThich: "Đáp án: A" }
+                ]
+            },
+            "PhuongTrinhDuongThang": {
+                name: "Bài 14: PT Đường thẳng",
+                lyThuyet: `<ul><li>PT tham số đi qua A(x₀;y₀;z₀) có VTCP u&#x20D7;=(a;b;c):<br><code>{x=x₀+at, y=y₀+bt, z=z₀+ct}</code></li><li>PT chính tắc (abc&ne;0): <code>(x-x₀)/a = (y-y₀)/b = (z-z₀)/c</code></li></ul>`,
+                tracNghiem: [
+                     { cauHoi: "Câu 41. VTCP của d:{x=4+2t, y=3+5t, z=1+8t} là:", dapAn: ["(2;5;8).", "(2;3;1).", "(4;3;8).", "(4;5;1)."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                     { cauHoi: "Câu 42. VTCP của d: (x-5)/2 = (y-4)/3 = (z-7)/8 là:", dapAn: ["(3;4;7).", "(5;4;8).", "(2;3;8).", "(2;7;4)."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                     { cauHoi: "Câu 43. Đường thẳng d:{x=3+4t, y=7+2t, z=4+5t} đi qua điểm:", dapAn: ["M(1;−7;3).", "N(3;2;5).", "P(3;2;7).", "Q(3;7;4)."], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                     { cauHoi: "Câu 44. Điểm nào thuộc Δ: (x-1)/7 = (y-3)/2 = (z-4)/5?", dapAn: ["M(2;1;5).", "N(7;3;4).", "P(1;3;4).", "Q(1;2;7)."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                     { cauHoi: "Câu 45. PTTS của Δ đi qua M(5;2;3) có VTCP u→=(3;4;1) là:", dapAn: ["{x=5+3t, y=2+4t, z=4+3t}", "{x=3+5t, y=2+2t, z=1+5t}", "{x=5+3t, y=2+4t, z=3+t}", "{x=5+3t, y=4+7t, z=3−3t}"], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                     { cauHoi: "Câu 46. PTCT của Δ đi qua M(1;4;-3) có VTCP u→=(3;5;-3) là:", dapAn: ["(x-4)/3=(y+1)/-5=(z-3)/-3", "(x-3)/1=(y+5)/4=(z-3)/-3", "(x+1)/3=(y+4)/-5=(z-3)/-3", "(x-1)/3=(y-4)/5=(z+3)/-3"], dapAnDung: 3, giaiThich: "Đáp án: D" },
+                     { cauHoi: "Câu 47. PTTS của Δ: (x+1)/2 = (y-2)/(-4) = (z+2)/3 là:", dapAn: ["{x=1+2t, y=-2-4t, z=2+3t}", "{x=-1+2t, y=2-4t, z=-2+3t}", "{x=-1+2t, y=2+4t, z=-2+3t}", "{x=1+2t, y=2-4t, z=2+3t}"], dapAnDung: 1, giaiThich: "Đáp án: B" },
+                     { cauHoi: "Câu 48. PT đường thẳng AB với A(3;-4;1), B(1;-2;2) là:", dapAn: ["(x+3)/-2=(y-4)/2=(z+1)/1", "(x-3)/-2=(y+4)/2=(z-1)/1", "(x-3)/2=(y+4)/2=(z-1)/1", "(x+3)/2=(y+4)/-2=(z-1)/1"], dapAnDung: 1, giaiThich: "Đáp án: B" },
+                     { cauHoi: "Câu 49. Δ qua A(-2;3;1), ⊥d, song song (P). Phương trình Δ là:", dapAn: ["(x+2)/-7=(y-3)/3=(z-1)/-1", "(x-2)/-7=(y+3)/3=(z+1)/-1", "(x+2)/7=(y-3)/3=(z-1)/-1", "(x-2)/7=(y-3)/-3=(z+1)/-1"], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                     { cauHoi: "Câu 50. Δ:{x=1-2t...} ⊂ (P):2x+my+nz-3=0. Giá trị T=m-4n là:", dapAn: ["T=−2", "T=2", "T=6", "T=−6"], dapAnDung: 3, giaiThich: "Đáp án: D" }
+                ]
+            },
+            "GocTrongKhongGian": {
+                name: "Bài 16: Góc trong không gian",
+                lyThuyet: `<h3>Góc giữa hai đường thẳng</h3><p>Δ (VTCP u&#x20D7;) và Δ' (VTCP u'&#x20D7;): <code>cos(Δ,Δ') = |cos(u&#x20D7;,u'&#x20D7;)| = |u&#x20D7; &sdot; u'&#x20D7;| / (|u&#x20D7;| &sdot; |u'&#x20D7;|)</code>.</p>`,
+                tracNghiem: [
+                    { cauHoi: "Câu 51. Cosin góc giữa Δ:{x=1+t...} và d: (x-1)/2=(y+2)/2=(z-4)/1 là:", dapAn: ["2√3/3", "2√2/3", "-2√3/3", "-2√2/3"], dapAnDung: 1, giaiThich: "Đáp án: B" },
+                    { cauHoi: "Câu 52. Cosin góc giữa Δ:{x=2-t...} và d: (x-2)/5=(y-3)/2=(z+5)/1 là:", dapAn: ["√5/3", "-√15/3", "√5/30", "-√5/30"], dapAnDung: 2, giaiThich: "Đáp án: C" }
+                ]
+            },
+            "PhuongTrinhMatCau": {
+                name: "Bài 17: PT Mặt cầu",
+                lyThuyet: `<ul><li>PT mặt cầu tâm I(a;b;c), bán kính R: <code>(x-a)²+(y-b)²+(z-c)² = R²</code></li><li>Dạng khai triển: <code>x²+y²+z²-2ax-2by-2cz+d=0</code>. Điều kiện: <code>a²+b²+c²-d > 0</code>.</li></ul>`,
+                tracNghiem: [
+                    { cauHoi: "Câu 53. Tâm I của (S):(x-3)²+(y-2)²+(z-1)²=16 là:", dapAn: ["I(3;2;1).", "I(−3;2;0).", "I(3;−2;−1).", "I(3;2;0)."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 54. Bán kính R của (S):(x-3)²+(y-2)²+(z-1)²=25 là:", dapAn: ["R=25.", "R=3.", "R=5.", "R=2."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 55. PT mặt cầu tâm I(3;-2;-6), đường kính AB=10 là:", dapAn: ["(x−3)²+(y+2)²+(z+6)²=25.", "(x−3)²+(y+2)²+(z+6)²=100.", "(x−3)²+(y+2)²+(z+6)²=10.", "(x−3)²+(y+2)²+(z+6)²=5."], dapAnDung: 0, giaiThich: "Đáp án: A" },
+                    { cauHoi: "Câu 56. Thiết bị phát sóng tại T(1;1;0), bán kính 4. Điểm nào thuộc vùng phủ sóng?", dapAn: ["M(6;1;0).", "N(7;1;0).", "P(4;1;0).", "Q(8;1;0)."], dapAnDung: 2, giaiThich: "Đáp án: C" },
+                    { cauHoi: "Câu 57. Có bao nhiêu giá trị nguyên của m để pt ... là pt mặt cầu?", dapAn: ["6.", "3.", "4.", "5."], dapAnDung: 1, giaiThich: "Đáp án: B" },
+                    { cauHoi: "Câu 58. Có bao nhiêu giá trị nguyên của m để pt ... là pt mặt cầu?", dapAn: ["5.", "6.", "7.", "8."], dapAnDung: 1, giaiThich: "Đáp án: B" }
+                ]
+            },
+            "DeThiThu01": {
+                name: "Đề Thi Thử 01",
+                lyThuyet: `<h3>Đáp án Đề Thi Thử 01</h3><p><i>Do dữ liệu gốc chỉ cung cấp đáp án, phần trắc nghiệm tương tác cho đề này không có sẵn. Vui lòng sử dụng danh sách dưới đây để đối chiếu.</i></p><div class="answer-key"><ol><li>A</li><li>D</li><li>D</li><li>D</li><li>C</li><li>C</li><li>A</li><li>D</li><li>C</li><li>B</li><li>A</li><li>C</li><li>B</li><li>C</li><li>D</li><li>A</li><li>C</li><li>A</li><li>B</li><li>C</li><li>B</li><li>A</li><li>D</li><li>B</li><li>A</li><li>B</li><li>A</li><li>D</li><li>B</li><li>B</li><li>A</li><li>B</li><li>D</li><li>C</li><li>D</li><li>A</li><li>A</li><li>A</li><li>D</li><li>C</li></ol></div>`,
+                tracNghiem: []
+            },
+            "DeThiThu02": {
+                name: "Đề Thi Thử 02",
+                lyThuyet: `<h3>Đáp án Đề Thi Thử 02</h3><p><i>Do dữ liệu gốc chỉ cung cấp đáp án, phần trắc nghiệm tương tác cho đề này không có sẵn. Vui lòng sử dụng danh sách dưới đây để đối chiếu.</i></p><div class="answer-key"><ol><li>D</li><li>D</li><li>B</li><li>D</li><li>A</li><li>C</li><li>A</li><li>B</li><li>A</li><li>B</li><li>C</li><li>C</li><li>A</li><li>D</li><li>D</li><li>B</li><li>A</li><li>D</li><li>B</li><li>C</li><li>B</li><li>D</li><li>D</li><li>B</li><li>A</li><li>B</li><li>A</li><li>C</li><li>D</li><li>B</li><li>D</li><li>D</li><li>B</li><li>D</li><li>C</li><li>B</li><li>A</li><li>C</li><li>D</li><li>A</li></ol></div>`,
+                tracNghiem: []
+            },
+            "DeThiThu03": {
+                name: "Đề Thi Thử 03",
+                lyThuyet: `<h3>Đáp án Đề Thi Thử 03</h3><p><i>Do dữ liệu gốc chỉ cung cấp đáp án, phần trắc nghiệm tương tác cho đề này không có sẵn. Vui lòng sử dụng danh sách dưới đây để đối chiếu.</i></p><div class="answer-key"><ol><li>C</li><li>A</li><li>B</li><li>B</li><li>A</li><li>B</li><li>C</li><li>D</li><li>C</li><li>A</li><li>C</li><li>D</li><li>C</li><li>C</li><li>A</li><li>C</li><li>B</li><li>C</li><li>D</li><li>B</li><li>A</li><li>C</li><li>C</li><li>B</li><li>A</li><li>B</li><li>D</li><li>B</li><li>B</li><li>D</li><li>C</li><li>B</li><li>C</li><li>A</li><li>B</li><li>D</li><li>A</li><li>B</li><li>D</li><li>B</li></ol></div>`,
+                tracNghiem: []
+            }
+        }
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const navigationContainer = document.getElementById('navigation-container');
+    const topicContainer = document.getElementById('topic-container');
+    const subjectKey = "Toan"; 
+
+    function setCardColor(card, color) { if (color) { card.style.borderTopColor = color; const h3 = card.querySelector('h3'); if (h3) h3.style.color = color; } }
+
+    function renderTopics() {
+        navigationContainer.innerHTML = '';
+        topicContainer.innerHTML = '';
+        
+        // --- EDIT START ---
+        // Added the back button to link to index.html
+        const backButtonLink = document.createElement('a');
+        backButtonLink.href = 'index.html'; // Set the destination
+        backButtonLink.className = 'back-button-link';
+        backButtonLink.innerHTML = `<button class="back-button">‹ Quay lại trang chính</button>`;
+        navigationContainer.appendChild(backButtonLink);
+        // --- EDIT END ---
+        
+        const topicWrapper = document.createElement('div');
+        topicWrapper.id = 'topics-container';
+        
+        const subject = khoDuLieu[subjectKey];
+        for (const key in subject.topics) {
+            const topic = subject.topics[key];
+            const card = document.createElement('div');
+            card.className = 'card';
+            const questionCount = topic.tracNghiem.length;
+            
+            card.innerHTML = `<h3>${topic.name}</h3><p>${questionCount > 0 ? questionCount + ' câu hỏi' : 'Đáp án tham khảo'}</p>`;
+            
+            setCardColor(card, subject.color);
+            card.onclick = () => renderTopicDetail(key);
+            topicWrapper.appendChild(card);
+        }
+        topicContainer.appendChild(topicWrapper);
+    }
+    
+    function renderTopicDetail(topicKey) {
+        navigationContainer.innerHTML = '';
+        topicContainer.innerHTML = '';
+        const subjectData = khoDuLieu[subjectKey];
+        const topicData = subjectData.topics[topicKey];
+        
+        document.documentElement.style.setProperty('--primary-color', subjectData.color);
+        document.documentElement.style.setProperty('--light-primary', subjectData.color + '20');
+
+        let fullHTML = `<button class="back-button" onclick="renderTopics()">‹ Quay lại chọn chuyên đề Toán</button>
+            <div class="topic-view">
+                <header class="header"><h1>${topicData.name}</h1><p>Môn ${subjectData.name}</p></header>
+                <div class="tab-system">
+                    <button class="tab-button active" onclick="openTab(event, 'LyThuyet')">Lý Thuyết & Đáp án</button>
+                    ${topicData.tracNghiem.length > 0 ? `<button class="tab-button" onclick="openTab(event, 'LuyenTap')">Luyện Tập</button>` : ''}
+                </div>
+                <div id="LyThuyet" class="tab-content active theory">${topicData.lyThuyet || '<p>Chưa có lý thuyết.</p>'}</div>
+                <div id="LuyenTap" class="tab-content"></div>
+            </div>`;
+        
+        topicContainer.innerHTML = fullHTML;
+        
+        const practiceContainer = topicContainer.querySelector('#LuyenTap');
+        topicData.tracNghiem.forEach((question, index) => {
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'question-block';
+            let optionsHTML = '<ul class="options">';
+            
+            question.dapAn.forEach((optionText, optionIndex) => {
+                optionsHTML += `<li class="option" onclick="checkAnswer(this, ${index}, '${topicKey}')">${String.fromCharCode(65 + optionIndex)}. ${optionText}</li>`;
+            });
+
+            optionsHTML += '</ul>';
+            
+            questionBlock.innerHTML = `<p class="question-text">${question.cauHoi}</p>${optionsHTML}<div class="explanation"><strong>${question.giaiThich}</strong></div>`;
+            
+            practiceContainer.appendChild(questionBlock);
+        });
+    }
+
+    window.checkAnswer = function(selectedOption, questionIndex, topicKey) {
+        const questionData = khoDuLieu[subjectKey].topics[topicKey].tracNghiem[questionIndex];
+        const options = selectedOption.parentElement.children;
+        const selectedIndex = Array.from(options).indexOf(selectedOption);
+        
+        for (let option of options) {
+            option.classList.add('disabled');
+            option.onclick = null;
+        }
+
+        if (selectedIndex === questionData.dapAnDung) {
+            selectedOption.classList.add('correct');
+        } else {
+            selectedOption.classList.add('incorrect');
+            if (options[questionData.dapAnDung]) {
+                options[questionData.dapAnDung].classList.add('correct');
+            }
+        }
+        const explanationDiv = selectedOption.parentElement.parentElement.querySelector('.explanation');
+        if (explanationDiv) {
+            explanationDiv.classList.add('visible');
+        }
+    }
+
+    window.openTab = function(evt, tabName) {
+        const parent = evt.target.closest('.topic-view');
+        const tabcontent = parent.querySelectorAll(".tab-content");
+        tabcontent.forEach(tc => tc.style.display = "none");
+        const tabbuttons = parent.querySelectorAll(".tab-button");
+        tabbuttons.forEach(tb => tb.className = tb.className.replace(" active", ""));
+        parent.querySelector("#" + tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    
+    window.renderTopics = renderTopics;
+    
+    renderTopics(); 
+});
+</script>
+</body>
+</html>
