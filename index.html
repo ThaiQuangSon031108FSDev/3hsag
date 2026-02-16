@@ -1,912 +1,383 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <title>Ôn tập Luật Dân sự - Chia thừa kế</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    :root {
-      --bg-page: #f5f7fb;
-      --bg-card: #ffffff;
-      --primary: #2563eb;
-      --primary-soft: #dbeafe;
-      --border-soft: #e5e7eb;
-      --border-strong: #2563eb;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.08);
-      --radius-lg: 18px;
-      --radius-md: 12px;
-      --radius-sm: 8px;
-      --transition-fast: 0.2s ease;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: var(--bg-page);
-      color: var(--text-main);
-      line-height: 1.5;
-    }
-
-    .page-header {
-      padding: 1.5rem 1rem 2rem;
-      background: radial-gradient(circle at top left, #bfdbfe, #eff6ff 55%);
-      border-bottom: 1px solid #dbeafe;
-    }
-
-    .page-header-inner {
-      max-width: 1160px;
-      margin: 0 auto;
-    }
-
-    .page-title {
-      margin: 0 0 0.5rem;
-      font-size: clamp(1.5rem, 3vw, 2.1rem);
-      font-weight: 700;
-      color: #1e293b;
-      letter-spacing: -0.03em;
-    }
-
-    .page-subtitle {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    .tagline {
-      margin-top: 0.6rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.3rem 0.6rem;
-      border-radius: 999px;
-      background: rgba(37, 99, 235, 0.06);
-      color: #1d4ed8;
-      font-size: 0.78rem;
-      font-weight: 500;
-    }
-
-    .page-main {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 1.5rem 1rem 2.5rem;
-    }
-
-    .intro {
-      margin-bottom: 1.5rem;
-      padding: 1rem 1.1rem;
-      background: #ffffff;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-soft);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .intro strong {
-      color: var(--text-main);
-    }
-
-    .intro ul {
-      padding-left: 1.1rem;
-      margin: 0.4rem 0 0;
-    }
-
-    .intro li {
-      margin: 0.15rem 0;
-    }
-
-    .cases-section {
-      margin-top: 1.75rem;
-    }
-
-    .cases-grid {
-      display: grid;
-      gap: 1.5rem;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-
-    .case-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-soft);
-      padding: 1.1rem 1.15rem 1rem;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
-      display: flex;
-      flex-direction: column;
-      min-height: 260px;
-      position: relative;
-      overflow: hidden;
-      transition: box-shadow var(--transition-fast),
-        transform var(--transition-fast), border-color var(--transition-fast);
-    }
-
-    .case-card:hover {
-      box-shadow: var(--shadow-soft);
-      transform: translateY(-2px);
-    }
-
-    .case-card.checked {
-      border-color: var(--border-strong);
-      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.18);
-    }
-
-    .case-title {
-      margin: 0;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #111827;
-    }
-
-    .case-meta {
-      margin: 0.15rem 0 0.55rem;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .question-wrapper {
-      position: relative;
-      margin-bottom: 0.4rem;
-    }
-
-    .question-text {
-      margin: 0.35rem 0 0.4rem;
-      font-size: 0.86rem;
-      color: #111827;
-      max-height: 5.8rem;
-      overflow: hidden;
-      position: relative;
-      transition: max-height 0.25s ease;
-    }
-
-    .question-text.expanded {
-      max-height: 1000px;
-    }
-
-    .question-text::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 2.1rem;
-      background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0),
-        #ffffff 85%
-      );
-      pointer-events: none;
-      opacity: 1;
-      transition: opacity 0.2s ease;
-    }
-
-    .question-text.expanded::after {
-      opacity: 0;
-    }
-
-    .toggle-question {
-      border: none;
-      background: transparent;
-      color: var(--primary);
-      font-size: 0.78rem;
-      font-weight: 500;
-      padding: 0;
-      margin-bottom: 0.2rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      cursor: pointer;
-    }
-
-    .toggle-question::after {
-      content: "▾";
-      font-size: 0.7rem;
-      transition: transform 0.2s ease;
-    }
-
-    .toggle-question.expanded::after {
-      transform: rotate(180deg);
-    }
-
-    .answer-label {
-      margin: 0.4rem 0 0.2rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #374151;
-    }
-
-    textarea {
-      width: 100%;
-      resize: vertical;
-      min-height: 70px;
-      max-height: 180px;
-      padding: 0.5rem 0.6rem;
-      font-family: inherit;
-      font-size: 0.85rem;
-      border-radius: var(--radius-md);
-      border: 1px solid #d1d5db;
-      outline: none;
-      transition: border-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        background-color var(--transition-fast);
-      background-color: #f9fafb;
-    }
-
-    textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
-      background-color: #ffffff;
-    }
-
-    textarea.checked-input {
-      border-color: var(--border-strong);
-      background-color: #ecfdf3;
-    }
-
-    .actions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    button {
-      font-family: inherit;
-    }
-
-    .btn {
-      border-radius: 999px;
-      border: 1px solid transparent;
-      padding: 0.4rem 0.9rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.3rem;
-      transition: background-color var(--transition-fast),
-        border-color var(--transition-fast), transform var(--transition-fast),
-        box-shadow var(--transition-fast), color var(--transition-fast);
-      white-space: nowrap;
-    }
-
-    .btn-primary {
-      background-color: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
-    }
-
-    .btn-primary:hover {
-      background-color: #1d4ed8;
-      transform: translateY(-1px);
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
-    }
-
-    .btn-secondary {
-      background-color: #f3f4f6;
-      color: #374151;
-      border-color: #e5e7eb;
-    }
-
-    .btn-secondary:hover {
-      background-color: #e5e7eb;
-    }
-
-    .result-area {
-      margin-top: 0.65rem;
-      padding: 0.7rem 0.75rem 0.75rem;
-      background-color: #f1f5f9;
-      border-radius: var(--radius-md);
-      border: 1px solid #cbd5f5;
-      font-size: 0.8rem;
-      color: #111827;
-      white-space: pre-line;
-    }
-
-    .result-area[hidden] {
-      display: none;
-    }
-
-    .result-short {
-      margin: 0 0 0.4rem;
-      font-size: 0.8rem;
-      color: #111827;
-    }
-
-    .result-explanation {
-      margin: 0.1rem 0 0;
-      font-size: 0.8rem;
-      color: #111827;
-    }
-
-    .status-message {
-      margin: 0.25rem 0 0;
-      font-size: 0.75rem;
-      color: #059669;
-      min-height: 0.9rem;
-    }
-
-    .page-footer {
-      padding: 0.5rem 1rem 1.3rem;
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    @media (max-width: 600px) {
-      .page-header {
-        padding-bottom: 1.5rem;
-      }
-
-      .intro {
-        padding: 0.85rem 0.9rem;
-      }
-
-      .case-card {
-        padding: 0.95rem;
-      }
-
-      .actions {
-        flex-direction: row;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header class="page-header">
-    <div class="page-header-inner">
-      <h1 class="page-title">Ôn tập Luật Dân sự – Chia thừa kế</h1>
-      <p class="page-subtitle">
-        12 tình huống thừa kế theo BLDS 2015 – luyện tập cách xác định di sản,
-        hàng thừa kế, suất bắt buộc, thừa kế thế vị...
-      </p>
-      <div class="tagline">
-        <span>📚</span>
-        <span>Làm thử trước → rồi hãy xem đáp án & lời giải</span>
-      </div>
-    </div>
-  </header>
-
-  <main class="page-main">
-    <section class="intro">
-      <strong>Hướng dẫn sử dụng trang ôn tập:</strong>
-      <ul>
-        <li>Đọc đề bài, tự suy nghĩ và nhập câu trả lời vào ô phía dưới.</li>
-        <li>Bấm <strong>“Kiểm tra đáp án”</strong> để hiện đáp án rút gọn và lời giải chi tiết.</li>
-        <li>Bấm <strong>“Làm lại”</strong> nếu muốn ẩn đáp án và làm lại từ đầu.</li>
-        <li>Ô trả lời chuyển viền xanh lá khi bạn đã kiểm tra xong.</li>
-      </ul>
-    </section>
-
-    <section class="cases-section">
-      <div id="casesGrid" class="cases-grid"></div>
-    </section>
-  </main>
-
-  <footer class="page-footer">
-    Gợi ý: bạn có thể tự chỉnh sửa số liệu, câu hỏi và lời giải trong file này để phù hợp với
-    tài liệu ôn tập của mình.
-  </footer>
-
-  <script>
-    // =========================
-    // 1. DỮ LIỆU 12 BỘ ĐỀ
-    // =========================
-    const cases = [
-      {
-        id: 1,
-        title: "Đề 1 – Thừa kế thế vị, chia theo pháp luật",
-        question: `Ông A và bà B có hai người con chung là C và D. Trong thời kỳ hôn nhân, vợ chồng có khối tài sản chung trị giá 1,7 tỷ đồng. Ngoài ra, ông A có một khoản tiền tiết kiệm riêng 200 triệu đồng.
-
-Năm 2018, con C chết, để lại một người con là K. Năm 2020, ông A chết, không để lại di chúc. Chi phí mai táng hết 100 triệu đồng, lấy từ tài sản của ông A.
-
-Hỏi: Di sản của ông A được chia như thế nào? Xác định người được hưởng và số tiền mỗi người nhận được.`,
-        answer:
-          "Di sản 950 triệu chia đều cho 3 người: bà B, con D và cháu K (thế vị cho C), mỗi người ≈ 316,6 triệu đồng.",
-        explanation: `1) Xác định di sản của ông A:
-- 1/2 tài sản chung: 1,7 tỷ : 2 = 850 triệu.
-- Cộng với tài sản riêng: 850 + 200 = 1.050 triệu.
-- Trừ chi phí mai táng 100 triệu → di sản còn lại: 1.050 − 100 = 950 triệu đồng.
-
-2) Xác định hàng thừa kế:
-- Theo Điều 651 BLDS 2015, hàng thừa kế thứ nhất gồm: vợ, chồng, cha mẹ đẻ, cha mẹ nuôi, con đẻ, con nuôi.
-- Ông A có vợ B, con D; con C đã chết trước A nhưng có con là K.
-- Cháu K được hưởng thừa kế thế vị của C theo Điều 652 BLDS 2015.
-
-→ Hàng thừa kế thực tế: B, D và K (thế vị cho C) → có 3 suất thừa kế.
-
-3) Chia di sản:
-- Mỗi suất: 950 : 3 ≈ 316,6 triệu đồng.
-- B được ≈ 316,6 triệu; D ≈ 316,6 triệu; K (thế vị C) ≈ 316,6 triệu đồng.`
-      },
-      {
-        id: 2,
-        title: "Đề 2 – Thừa kế theo pháp luật, có mẹ ruột của người chết",
-        question: `Ông M và bà N kết hôn hợp pháp, có ba người con chung là A, B, C. Mẹ ruột của ông M là cụ Y.
-
-Ông M chết, không để lại di chúc. Sau khi thanh toán nợ chung, chi phí mai táng..., giá trị di sản còn lại là 1 tỷ đồng.
-
-Hỏi: Di sản 1 tỷ đồng được chia như thế nào? Ai thuộc hàng thừa kế thứ nhất trong trường hợp này?`,
-        answer:
-          "Di sản 1 tỷ chia cho 5 người thuộc hàng thừa kế thứ nhất: bà N, cụ Y, A, B, C. Mỗi người được 200 triệu đồng.",
-        explanation: `1) Xác định hàng thừa kế:
-- Theo Điều 651 BLDS 2015, hàng thừa kế thứ nhất gồm: vợ/chồng, cha mẹ đẻ/nuôi, con đẻ/nuôi.
-- Trường hợp này: vợ N, mẹ ruột Y, các con A, B, C → tổng cộng 5 người.
-
-2) Vì không có di chúc nên di sản được chia theo pháp luật:
-- Di sản là 1 tỷ đồng.
-- Chia đều cho 5 người thuộc hàng thừa kế thứ nhất.
-
-3) Kết quả:
-- Mỗi suất thừa kế: 1.000.000.000 : 5 = 200.000.000 (200 triệu đồng).
-- Bà N: 200 triệu; cụ Y: 200 triệu; A: 200 triệu; B: 200 triệu; C: 200 triệu.`
-      },
-      {
-        id: 3,
-        title: "Đề 3 – Thừa kế thế vị (con chết trước bố)",
-        question: `Ông A và bà B có hai con chung là C và D. Năm 2018, D chết (trước ông A), để lại vợ là E và một con trai là F.
-
-Năm 2020, ông A chết, không để lại di chúc. Sau khi thanh toán chi phí, toàn bộ di sản của ông A còn lại là 800 triệu đồng.
-
-Hỏi: Ai được hưởng di sản và mỗi người nhận bao nhiêu? Vợ E có được hưởng thế vị không?`,
-        answer:
-          "Di sản 800 triệu chia cho 3 người: B, C và F (thế vị cho D). Mỗi người ≈ 266,6 triệu đồng. Vợ E không được hưởng thế vị.",
-        explanation: `1) Xác định hàng thừa kế:
-- Hàng thừa kế thứ nhất của A (Điều 651 BLDS): vợ B, các con C và D.
-- D đã chết trước A, nhưng D có con là F. F được hưởng thừa kế thế vị phần của D theo Điều 652 BLDS.
-- Vợ của D (E) không thuộc trường hợp thừa kế thế vị.
-
-→ Những người thực tế được hưởng: B, C và F (thế vị cho D) → 3 suất thừa kế.
-
-2) Chia di sản:
-- Di sản: 800 triệu đồng.
-- Mỗi suất thừa kế: 800 : 3 ≈ 266,6 triệu đồng.
-
-3) Kết luận:
-- Bà B: ≈ 266,6 triệu đồng.
-- Con C: ≈ 266,6 triệu đồng.
-- Cháu F (thế vị phần của D): ≈ 266,6 triệu đồng.
-- Vợ của D (E) không hưởng thế vị phần di sản của A.`
-      },
-      {
-        id: 4,
-        title: "Đề 4 – Suất thừa kế bắt buộc (Điều 644)",
-        question: `Ông A có vợ là B và hai người con: C (22 tuổi, có việc làm ổn định) và D (14 tuổi). Tổng di sản của ông A sau khi chết là 1,1 tỷ đồng.
-
-Trước khi chết, A lập di chúc cho C hưởng toàn bộ di sản 1,1 tỷ đồng, đồng thời ghi rõ “truất quyền hưởng di sản của vợ B và con D”.
-
-Hỏi:
-1) Việc truất quyền như vậy có làm B và D mất hết quyền hưởng di sản không?
-2) Hãy xác định phần di sản thực tế mà B, C, D được hưởng.`,
-        answer:
-          "B và D là người thừa kế không phụ thuộc vào nội dung di chúc. Mỗi người hưởng suất bắt buộc ≈ 244,4 triệu; C hưởng phần còn lại ≈ 611,2 triệu.",
-        explanation: `1) Xác định hàng thừa kế nếu chia theo pháp luật:
-- Hàng thừa kế thứ nhất: B (vợ), C, D (con).
-- Nếu chia theo pháp luật thì có 3 suất thừa kế, mỗi suất: 1,1 tỷ : 3 ≈ 366,6 triệu.
-
-2) Người có quyền hưởng thừa kế không phụ thuộc nội dung di chúc (Điều 644 BLDS 2015):
-- Gồm: vợ/chồng, con chưa thành niên, cha mẹ, con thành niên nhưng không có khả năng lao động...
-- Ở đây: vợ B và con D (14 tuổi, chưa thành niên) đều thuộc diện hưởng suất bắt buộc.
-
-3) Suất bắt buộc:
-- Mỗi người được 2/3 suất theo pháp luật: 2/3 × 366,6 ≈ 244,4 triệu.
-- Do A truất quyền nhưng đây là quyền bắt buộc → B và D vẫn được hưởng tối thiểu 244,4 triệu/người.
-
-4) Chia cụ thể:
-- B: 244,4 triệu (suất bắt buộc).
-- D: 244,4 triệu (suất bắt buộc).
-- Phần còn lại cho C: 1,1 tỷ − 244,4 × 2 ≈ 611,2 triệu.
-
-→ Kết luận: Di chúc của A không thể tước hoàn toàn quyền hưởng di sản của B và D.`
-      },
-      {
-        id: 5,
-        title: "Đề 5 – Di chúc cho Hội từ thiện và suất bắt buộc",
-        question: `Ông H có vợ là K, mẹ già là L và một con trai M bị khuyết tật, mất khả năng lao động. Di sản của ông H sau khi chết là 900 triệu đồng.
-
-Trong di chúc, ông H để lại toàn bộ 900 triệu đồng cho một Hội từ thiện, không cho K, L, M hưởng gì.
-
-Hỏi:
-1) Việc định đoạt toàn bộ cho Hội từ thiện như vậy có hợp pháp không?
-2) Những người nào được hưởng phần di sản bắt buộc và mỗi người nhận bao nhiêu?
-3) Phần còn lại Hội từ thiện được hưởng bao nhiêu?`,
-        answer:
-          "K, L, M đều là người thừa kế không phụ thuộc vào nội dung di chúc. Mỗi người hưởng 150 triệu (suất bắt buộc). Hội từ thiện nhận 450 triệu còn lại.",
-        explanation: `1) Về nguyên tắc tự do định đoạt:
-- Người lập di chúc có quyền định đoạt tài sản cho bất kỳ cá nhân, tổ chức nào (kể cả Hội từ thiện).
-- Tuy nhiên, phải tôn trọng quyền của “người thừa kế không phụ thuộc nội dung di chúc” theo Điều 644 BLDS 2015.
-
-2) Những người được hưởng suất bắt buộc:
-- Vợ K (vợ của H) → thuộc diện.
-- Mẹ L (mẹ ruột) → thuộc diện.
-- Con M bị khuyết tật, mất khả năng lao động → thuộc diện.
-→ Cả 3 đều có quyền hưởng tối thiểu 2/3 suất thừa kế theo pháp luật.
-
-3) Giả sử nếu chia theo pháp luật (chưa xét di chúc):
-- Hàng thừa kế thứ nhất: vợ K, mẹ L, con M → 3 suất thừa kế.
-- Mỗi suất theo pháp luật: 900 : 3 = 300 triệu.
-- Suất bắt buộc = 2/3 × 300 = 200 triệu/người. 
-(Tuy nhiên, đề bài yêu cầu kết quả tóm tắt: mỗi người thực nhận 150 triệu → có thể giả định người lập bài tập đã quy ước mức chia cụ thể để dễ tính.)
-
-4) Theo dữ liệu tóm tắt trong bài:
-- K, L, M mỗi người nhận 150 triệu.
-- Tổng suất bắt buộc: 150 × 3 = 450 triệu.
-- Phần còn lại cho Hội từ thiện: 900 − 450 = 450 triệu.
-
-→ Kết luận: Di chúc cho Hội từ thiện vẫn được công nhận, nhưng phải bảo đảm suất bắt buộc cho K, L, M.`
-      },
-      {
-        id: 6,
-        title: "Đề 6 – Di chúc cho “bồ nhí”, con đã thành niên khỏe mạnh",
-        question: `Ông A có vợ hợp pháp là B và ba người con C, D, E (đều đã thành niên, khỏe mạnh, có khả năng lao động). Tổng di sản của ông A là 1,9 tỷ đồng.
-
-Trước khi chết, ông A lập di chúc:
-- Cho vợ B hưởng 950 triệu đồng.
-- Cho người tình X hưởng 950 triệu đồng.
-- Không cho các con C, D, E hưởng gì.
-
-Di chúc được lập hợp pháp.
-
-Hỏi:
-1) Di chúc này có bị vô hiệu vì “cho bồ nhí” không?
-2) Các con C, D, E có được hưởng suất bắt buộc không?
-3) Hãy xác định số tiền mỗi người nhận được theo di chúc.`,
-        answer:
-          "Di chúc hợp pháp. B nhận 950 triệu, người tình X nhận 950 triệu. Các con C, D, E không được hưởng di sản (không thuộc diện suất bắt buộc trong tình huống giả định này).",
-        explanation: `1) Về nguyên tắc:
-- Pháp luật tôn trọng quyền tự do định đoạt của người lập di chúc (Điều 626 BLDS 2015).
-- Người lập di chúc có thể cho tài sản cho bất kỳ cá nhân, tổ chức nào, miễn không trái pháp luật, đạo đức xã hội và không xâm phạm suất bắt buộc.
-
-2) Người thừa kế không phụ thuộc di chúc (Điều 644 BLDS 2015):
-- Gồm: vợ/chồng; cha mẹ; con chưa thành niên; con đã thành niên nhưng không có khả năng lao động.
-- Trong tình huống này:
-  + Vợ B: là người thừa kế bắt buộc, nhưng di chúc cho B 950 triệu → lớn hơn 2/3 suất theo pháp luật → đã bảo đảm quyền của B.
-  + Các con C, D, E: đều đã thành niên, có khả năng lao động → không thuộc diện được “suất bắt buộc” trong dữ liệu đề bài đưa ra (giả định không có con nào mất khả năng lao động).
-
-3) Chia di sản:
-- Di sản: 1,9 tỷ đồng.
-- Theo di chúc:
-  + B: 950 triệu.
-  + X: 950 triệu.
-  + C, D, E: không được hưởng di sản.
-
-4) Kết luận:
-- Di chúc cho “bồ nhí” X vẫn hợp pháp nếu bảo đảm suất bắt buộc (ở đây đã bảo đảm cho B).
-- Con đã thành niên, có khả năng lao động, không thuộc diện bắt buộc → có thể không được hưởng theo di chúc.`
-      },
-      {
-        id: 7,
-        title: "Đề 7 – Di chúc cho anh ruột, bảo vệ vợ và con nhỏ",
-        question: `Ông A có vợ là B, con trai C mới 5 tuổi và anh ruột là D. Di sản của ông A sau khi chết là 600 triệu đồng.
-
-Trong di chúc, A ghi: “Tôi để lại toàn bộ 600 triệu cho anh ruột D”, không cho vợ B và con C hưởng gì. Di chúc hợp pháp về mặt hình thức.
-
-Hỏi:
-1) B và C có được hưởng suất thừa kế bắt buộc không?
-2) Hãy chia cụ thể số tiền mỗi người nhận được.`,
-        answer:
-          "B và C là người thừa kế không phụ thuộc vào nội dung di chúc. Mỗi người hưởng suất bắt buộc 200 triệu. Anh D hưởng 200 triệu còn lại.",
-        explanation: `1) Xác định hàng thừa kế nếu chia theo pháp luật:
-- Hàng thừa kế thứ nhất: vợ B, con C.
-- Anh ruột D không thuộc hàng thừa kế thứ nhất; chỉ được hưởng theo di chúc.
-- Nếu chia theo pháp luật (không có di chúc) → 2 suất thừa kế: B và C.
-- Mỗi suất: 600 : 2 = 300 triệu.
-
-2) Người được hưởng thừa kế không phụ thuộc nội dung di chúc (Điều 644 BLDS 2015):
-- Vợ B.
-- Con C (5 tuổi, chưa thành niên).
-→ Cả B và C đều được hưởng tối thiểu 2/3 suất theo pháp luật: 2/3 × 300 = 200 triệu/người.
-
-3) Chia cụ thể:
-- B: 200 triệu (suất bắt buộc).
-- C: 200 triệu (suất bắt buộc).
-- Phần còn lại cho D theo di chúc: 600 − 200 − 200 = 200 triệu.
-
-4) Kết luận:
-- Di chúc cho D hưởng “toàn bộ” không thể làm mất quyền bắt buộc của B và C.
-- D chỉ được hưởng phần còn lại sau khi đã đảm bảo suất bắt buộc cho B và C.`
-      },
-      {
-        id: 8,
-        title: "Đề 8 – Di chúc một phần, phần còn lại chia theo pháp luật",
-        question: `Ông A có vợ là B và hai con C, D. Sau khi A chết, di sản còn lại (sau khi trừ nghĩa vụ tài sản, chi phí mai táng...) là khoảng 1.133,2 triệu đồng.
-
-Trước khi chết, A lập di chúc cho C hưởng 500 triệu đồng, phần còn lại của di sản không đề cập trong di chúc.
-
-Hỏi:
-1) Phần di sản không được định đoạt trong di chúc sẽ chia như thế nào?
-2) Cuối cùng mỗi người (B, C, D) nhận được bao nhiêu?`,
-        answer:
-          "C được 500 triệu theo di chúc, cộng thêm phần chia theo pháp luật ⇒ tổng ≈ 816,6 triệu. B và D mỗi người ≈ 316,6 triệu.",
-        explanation: `1) Nguyên tắc:
-- Di chúc chỉ có hiệu lực đối với phần di sản được định đoạt.
-- Phần di sản không được định đoạt trong di chúc sẽ được chia theo pháp luật (Điều 650 BLDS 2015).
-
-2) Tính toán:
-- Tổng di sản: khoảng 1.133,2 triệu đồng.
-- Phần đã định đoạt trong di chúc: 500 triệu (cho C).
-- Phần còn lại chia theo pháp luật: 1.133,2 − 500 ≈ 633,2 triệu.
-
-3) Xác định người được chia theo pháp luật:
-- Hàng thừa kế thứ nhất: B (vợ), C, D (con).
-- 3 người cùng hàng, cùng được chia phần còn lại 633,2 triệu.
-
-4) Chia phần còn lại theo pháp luật:
-- Mỗi suất: 633,2 : 3 ≈ 211,1 triệu.
-- B: 211,1 triệu.
-- C: 211,1 triệu (ngoài 500 triệu theo di chúc).
-- D: 211,1 triệu.
-
-5) Cộng gộp:
-- B: ≈ 211,1 triệu → làm tròn thành khoảng 316,6 triệu theo tóm tắt đề bài (có thể do số liệu tròn khác một chút).
-- D: tương tự ≈ 316,6 triệu.
-- C: 500 + phần chia theo pháp luật ≈ 816,6 triệu.
-
-(Trong dữ liệu tóm tắt mà bạn cung cấp: B ≈ 316,6 triệu; D ≈ 316,6 triệu; C ≈ 816,6 triệu. Khi làm bài thực tế, bạn có thể điều chỉnh số liệu cho chính xác tuyệt đối.)`
-      },
-      {
-        id: 9,
-        title: "Đề 9 – Người thừa kế theo di chúc chết trước người lập di chúc",
-        question: `Ông A có vợ B và hai con C, D. Năm 2018, ông A lập di chúc cho C hưởng toàn bộ di sản (dự kiến) là 1 tỷ đồng.
-
-Năm 2019, C chết do tai nạn giao thông, để lại con gái Y. Năm 2020, A mới chết, không lập di chúc mới thay thế.
-
-Hỏi:
-1) Di chúc năm 2018 có còn hiệu lực không khi C đã chết trước A?
-2) Di sản 1 tỷ của A được chia như thế nào giữa B, D và Y?`,
-        answer:
-          "Di chúc cho C vô hiệu vì C chết trước A. Di sản chia theo pháp luật: B: ≈ 333,3 triệu; D: ≈ 333,3 triệu; Y hưởng thế vị phần của C: ≈ 333,3 triệu.",
-        explanation: `1) Hiệu lực của di chúc:
-- Người được chỉ định hưởng di sản (C) đã chết trước thời điểm mở thừa kế (thời điểm A chết).
-- Phần di chúc cho người đã chết không còn hiệu lực (Điều 643 BLDS 2015).
-- A không lập di chúc thay thế → phần di sản dự định cho C sẽ được chia theo pháp luật.
-
-2) Chia theo pháp luật:
-- Hàng thừa kế thứ nhất của A: vợ B, các con C và D.
-- C đã chết trước A nhưng có con là Y → Y được hưởng thừa kế thế vị phần của C theo Điều 652 BLDS.
-
-→ Những người được hưởng: B, D, Y → 3 suất thừa kế.
-
-3) Chia di sản:
-- Di sản: 1 tỷ đồng.
-- Mỗi suất: 1.000.000.000 : 3 ≈ 333,3 triệu đồng.
-- B: ≈ 333,3 triệu.
-- D: ≈ 333,3 triệu.
-- Y (thế vị phần của C): ≈ 333,3 triệu.
-
-4) Kết luận:
-- Phần di chúc chỉ định C hưởng toàn bộ di sản không còn hiệu lực vì C chết trước thời điểm mở thừa kế.
-- Di sản của A được chia theo pháp luật, có áp dụng thừa kế thế vị cho cháu Y.`
-      },
-      {
-        id: 10,
-        title:
-          "Đề 10 – Mẹ không được định đoạt phần tài sản thuộc về con (từ di sản của bố)",
-        question: `Ông A và bà B là vợ chồng, có hai con chung C và D. Khi A chết, sau khi chia tài sản và làm thủ tục thừa kế, xác định di sản mà A để lại cho vợ con là 900 triệu đồng.
-
-Theo việc chia di sản của A (có thể theo di chúc hợp pháp hoặc theo pháp luật), B, C, D mỗi người hưởng 300 triệu đồng từ di sản của A.
-
-Ngoài phần 300 triệu được hưởng từ chồng, bà B còn có tài sản riêng 1,2 tỷ đồng. Sau đó, bà B lập di chúc ghi: “Tôi để lại toàn bộ tài sản của tôi, bao gồm cả phần 300 triệu được hưởng từ di sản của chồng, cho con D hưởng hết”. B chết, di chúc hợp pháp.
-
-Hỏi:
-1) Cuối cùng C và D thực tế nhận được bao nhiêu?
-2) Bà B có quyền định đoạt luôn cả phần 300 triệu vốn thuộc sở hữu của C (được hưởng từ A) không?`,
-        answer:
-          "C nhận 300 triệu từ di sản của bố A. D nhận 300 triệu từ A và 1,2 tỷ từ B ⇒ tổng 1,5 tỷ. B không có quyền định đoạt phần 300 triệu thuộc sở hữu riêng của C.",
-        explanation: `1) Khi ông A chết, di sản được chia:
-- Tổng di sản của A: 900 triệu.
-- Chia cho B, C, D (theo di chúc hợp pháp hoặc theo pháp luật): mỗi người 300 triệu.
-- Sau khi phân chia, quyền sở hữu:
-  + B: 300 triệu từ A + 1,2 tỷ tài sản riêng của B.
-  + C: 300 triệu (tài sản riêng của C).
-  + D: 300 triệu (tài sản riêng của D).
-
-2) Phạm vi quyền định đoạt của B:
-- B chỉ có quyền định đoạt đối với tài sản thuộc sở hữu của mình.
-- Tài sản của B gồm: 1,2 tỷ (tài sản riêng) + 300 triệu (phần thừa kế từ A) = 1,5 tỷ.
-- B không thể định đoạt phần 300 triệu thuộc sở hữu của C (được hưởng từ A).
-
-3) Hiệu lực di chúc của B:
-- Di chúc của B chỉ có hiệu lực đối với 1,5 tỷ thuộc quyền sở hữu của B.
-- Theo di chúc, toàn bộ 1,5 tỷ này để lại cho D.
-
-4) Kết quả cuối cùng:
-- C: vẫn sở hữu 300 triệu đã nhận từ A (B không thể “lấy lại” bằng di chúc của mình).
-- D:
-  + 300 triệu đã nhận từ A.
-  + 1,5 tỷ nhận từ B (theo di chúc).
-  → Tổng cộng: 1,8 tỷ nếu tính cả phần từ A, nhưng theo phần tóm tắt bạn cung cấp: chú trọng rằng D nhận 300 triệu từ A + 1,2 tỷ từ tài sản riêng của B = 1,5 tỷ.
-
-→ Ý chính của bài: mỗi người chỉ được định đoạt đối với tài sản thuộc sở hữu của mình; B không thể dùng di chúc để tước đoạt phần 300 triệu của C.`
-      },
-      {
-        id: 11,
-        title: "Đề 11 – Con nuôi và con đẻ trong thừa kế",
-        question: `Ông A chưa kết hôn, có một con nuôi hợp pháp là B và một con ruột (con đẻ) là C. Di sản của A là 1 tỷ đồng.
-
-Trong di chúc, A để lại 500 triệu cho người hàng xóm D, phần 500 triệu còn lại không đề cập.
-
-Hỏi:
-1) Con nuôi B và con đẻ C có được coi là cùng hàng thừa kế không?
-2) Phần di sản 500 triệu không được định đoạt trong di chúc sẽ chia như thế nào?
-3) Mỗi người B, C, D nhận được bao nhiêu?`,
-        answer:
-          "Người hàng xóm D nhận 500 triệu theo di chúc. Phần còn lại 500 triệu chia theo pháp luật: B (con nuôi) 250 triệu, C (con đẻ) 250 triệu.",
-        explanation: `1) Về địa vị pháp lý của con nuôi:
-- Con nuôi hợp pháp được hưởng quyền, nghĩa vụ như con đẻ (Điều 653 BLDS và Luật Nuôi con nuôi).
-- Trong thừa kế, con nuôi và con đẻ thuộc cùng hàng thừa kế thứ nhất.
-
-2) Phần di sản được định đoạt trong di chúc:
-- D được hưởng 500 triệu theo di chúc → phần này được ưu tiên thực hiện.
-
-3) Phần di sản không được định đoạt:
-- 500 triệu còn lại không được nêu trong di chúc.
-- Phần này sẽ được chia theo pháp luật (Điều 650 BLDS 2015).
-- Hàng thừa kế thứ nhất: B (con nuôi), C (con đẻ).
-
-→ Chia 500 triệu cho 2 người: mỗi người 250 triệu.
-
-4) Kết quả:
-- D: 500 triệu (theo di chúc).
-- B: 250 triệu (thừa kế theo pháp luật).
-- C: 250 triệu (thừa kế theo pháp luật).`
-      },
-      {
-        id: 12,
-        title:
-          "Đề 12 – Bù trừ suất bắt buộc từ phần của người thừa kế theo di chúc",
-        question: `Ông A có vợ là B và ba người con: C (20 tuổi, khỏe mạnh), D (18 tuổi, khỏe mạnh) và E (10 tuổi). Di sản A để lại là 1,7 tỷ đồng.
-
-Trước khi chết, A lập di chúc:
-- Cho C hưởng 750 triệu.
-- Cho D hưởng 750 triệu.
-- Cho B hưởng 100 triệu.
-- Cho E hưởng 100 triệu.
-
-Di chúc hợp pháp về hình thức.
-
-Hỏi:
-1) Việc chia như trên có phù hợp với quy định về “người thừa kế không phụ thuộc vào nội dung di chúc” (Điều 644 BLDS) hay không?
-2) Nếu không, phải điều chỉnh (bù trừ) như thế nào để bảo đảm B và E nhận đủ suất thừa kế bắt buộc?`,
-        answer:
-          "B và E (10 tuổi) là người thừa kế không phụ thuộc vào nội dung di chúc, nhưng phần được hưởng 100 triệu chưa đủ suất bắt buộc. Phải trích bớt từ phần của C và D để bù cho B và E, sao cho mỗi người B và E nhận đủ khoảng 283,3 triệu.",
-        explanation: `1) Xác định nếu chia theo pháp luật:
-- Hàng thừa kế thứ nhất: B (vợ), C, D, E (các con).
-- Tổng cộng 4 người.
-- Nếu chia theo pháp luật: mỗi suất = 1,7 tỷ : 4 = 425 triệu.
-
-2) Suất thừa kế bắt buộc (Điều 644 BLDS 2015):
-- Người được hưởng thừa kế không phụ thuộc nội dung di chúc:
-  + B (vợ của A).
-  + E (10 tuổi, con chưa thành niên).
-- Mỗi người phải được hưởng tối thiểu 2/3 suất theo pháp luật:
-  + 2/3 × 425 ≈ 283,3 triệu.
-
-3) Đối chiếu với di chúc:
-- Di chúc cho B: 100 triệu → thấp hơn 283,3 triệu → thiếu khoảng 183,3 triệu.
-- Di chúc cho E: 100 triệu → cũng thiếu khoảng 183,3 triệu.
-- Tổng thiếu: 183,3 × 2 ≈ 366,6 triệu.
-
-4) Cách điều chỉnh:
-- Phải trích bớt từ phần của C và D (những người được hưởng nhiều theo di chúc) để bù cho B và E.
-- Sau điều chỉnh:
-  + B: được nâng lên ≈ 283,3 triệu.
-  + E: được nâng lên ≈ 283,3 triệu.
-  + Phần bị trừ ra sẽ được khấu trừ tương ứng vào phần của C và D.
-
-5) Kết luận:
-- B và E là người thừa kế không phụ thuộc vào nội dung di chúc.
-- Không thể để B và E chỉ nhận 100 triệu/người.
-- Phải trích từ phần của C và D để đảm bảo B và E mỗi người đủ khoảng 283,3 triệu (suất bắt buộc).`
-      }
-    ];
-
-    // =========================
-    // 2. HÀM DỰNG GIAO DIỆN
-    // =========================
-    function createCaseCard(caseData) {
-      const card = document.createElement("article");
-      card.className = "case-card";
-      card.dataset.id = caseData.id;
-
-      card.innerHTML = `
-        <h2 class="case-title">${caseData.title}</h2>
-        <p class="case-meta">ID: ${caseData.id.toString().padStart(2, "0")} · BLDS 2015</p>
-
-        <div class="question-wrapper">
-          <p class="question-text"></p>
-        </div>
-        <button type="button" class="toggle-question">Xem thêm</button>
-
-        <p class="answer-label">Nhập cách chia thừa kế theo suy nghĩ của bạn:</p>
-        <textarea placeholder="Ví dụ: Di sản là..., chia cho B, C, D mỗi người..."></textarea>
-
-        <div class="actions">
-          <button type="button" class="btn btn-primary check-btn">✅ Kiểm tra đáp án</button>
-          <button type="button" class="btn btn-secondary reset-btn">↩️ Làm lại</button>
-        </div>
-
-        <div class="result-area" hidden>
-          <p class="result-short"><strong>Đáp án rút gọn:</strong> <span class="answer-text"></span></p>
-          <p><strong>Đáp án &amp; Lời giải chi tiết:</strong></p>
-          <p class="result-explanation"></p>
-        </div>
-
-        <p class="status-message" aria-live="polite"></p>
-      `;
-
-      // Gán nội dung câu hỏi, đáp án, lời giải (dùng textContent để giữ định dạng xuống dòng)
-      const questionTextEl = card.querySelector(".question-text");
-      questionTextEl.textContent = caseData.question;
-
-      const answerSpan = card.querySelector(".answer-text");
-      answerSpan.textContent = caseData.answer;
-
-      const explanationP = card.querySelector(".result-explanation");
-      explanationP.textContent = caseData.explanation;
-
-      // Gắn event: Xem thêm / Thu gọn
-      const toggleBtn = card.querySelector(".toggle-question");
-      toggleBtn.addEventListener("click", () => {
-        const expanded = questionTextEl.classList.toggle("expanded");
-        toggleBtn.classList.toggle("expanded", expanded);
-        toggleBtn.textContent = expanded ? "Thu gọn" : "Xem thêm";
-      });
-
-      // Gắn event: Kiểm tra đáp án
-      const textarea = card.querySelector("textarea");
-      const checkBtn = card.querySelector(".check-btn");
-      const resetBtn = card.querySelector(".reset-btn");
-      const resultArea = card.querySelector(".result-area");
-      const statusMsg = card.querySelector(".status-message");
-
-      checkBtn.addEventListener("click", () => {
-        const userAnswer = textarea.value.trim();
-
-        if (!userAnswer) {
-          alert("Bạn hãy thử tự làm trước khi xem đáp án nhé! 😄");
-          textarea.focus();
-          return;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng dụng Học Từ Vựng All-in-One</title>
+    <style>
+        /* --- CSS CHUNG --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        resultArea.hidden = false;
-        textarea.classList.add("checked-input");
-        card.classList.add("checked");
-        statusMsg.textContent =
-          "Đã hiện đáp án, bạn hãy đối chiếu với bài làm của mình nhé.";
-      });
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin-top: 20px;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
 
-      // Gắn event: Làm lại
-      resetBtn.addEventListener("click", () => {
-        textarea.value = "";
-        textarea.classList.remove("checked-input");
-        card.classList.remove("checked");
-        resultArea.hidden = true;
-        statusMsg.textContent =
-          "Đã làm lại, hãy thử giải lại bài này một lần nữa nhé!";
-        textarea.focus();
-      });
+        h2 { color: #2c3e50; margin-bottom: 10px; }
 
-      return card;
-    }
+        /* --- THANH ĐIỀU HƯỚNG (TABS) --- */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
 
-    // =========================
-    // 3. KHỞI TẠO TRANG
-    // =========================
-    document.addEventListener("DOMContentLoaded", () => {
-      const grid = document.getElementById("casesGrid");
-      cases.forEach((item) => {
-        const card = createCaseCard(item);
-        grid.appendChild(card);
-      });
-    });
-  </script>
-</body>
-</html>
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background-color: #ecf0f1;
+            cursor: pointer;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #7f8c8d;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* --- NÚT BẤM CHUNG --- */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #2c3e50;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 5px;
+        }
+        .btn:hover { background-color: #34495e; }
+        .btn.secondary { background-color: #e67e22; }
+        .btn.secondary:hover { background-color: #d35400; }
+        .btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+
+        /* --- PHẦN 1: FLASHCARD --- */
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 300px;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .card.is-flipped { transform: rotateY(180deg); }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            background-color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #eee;
+        }
+
+        .back {
+            background-color: #3498db;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .ipa-container { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+        .speak-btn {
+            background: none; border: 1px solid #ddd; border-radius: 50%;
+            cursor: pointer; font-size: 1.2rem; padding: 5px 8px;
+        }
+        .speak-btn:hover { background-color: #eee; }
+
+        /* --- PHẦN 2: QUIZ (LUYỆN VIẾT) --- */
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            margin: 15px 0;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .word-item { font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
+        
+        input[type="text"] {
+            width: 80%; padding: 10px; font-size: 1.2rem;
+            margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; text-align: center;
+        }
+        input[type="text"]:focus { border-color: #3498db; outline: none; }
+
+        .result-msg { font-weight: bold; font-size: 1.1rem; min-height: 1.5rem; margin-bottom: 10px; }
+        .correct { color: #27ae60; }
+        .wrong { color: #e74c3c; }
+
+        /* --- PHẦN 3: DICTIONARY (TỪ ĐIỂN) --- */
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; position: sticky; top: 0; }
+        tr:hover { background-color: #f1f2f6; }
+        
+        .search-box {
+            width: 100%; padding: 10px; margin-bottom: 15px;
+            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('flashcard')">🃏 Flashcard</button>
+        <button class="tab-btn" onclick="showTab('quiz')">✍️ Luyện Viết</button>
+        <button class="tab-btn" onclick="showTab('dictionary')">📚 Từ Điển</button>
+    </div>
+
+    <div class="container">
+        
+        <div id="flashcard" class="tab-content active">
+            <h2>Flashcard Học Từ</h2>
+            <div id="fc-progress" style="margin-bottom:10px; color:#7f8c8d;"></div>
+            
+            <div class="card-container" id="cardContainer">
+                <div class="card" id="card">
+                    <div class="front">
+                        <h3 id="fc-word" style="font-size: 2.5rem; color: #2980b9; margin:0;">Word</h3>
+                        <div class="ipa-container">
+                            <span id="fc-ipa" style="font-style: italic; color: #7f8c8d;">/ipa/</span>
+                            <button id="fc-speak" class="speak-btn">🔊</button>
+                        </div>
+                        <span id="fc-type" style="background:#ecf0f1; padding:2px 8px; border-radius:10px;">(n)</span>
+                        <p style="margin-top:20px; font-size:0.8rem; color:#bdc3c7;">(Click để xem nghĩa)</p>
+                    </div>
+                    <div class="back">
+                        <h3 id="fc-meaning" style="font-size: 1.8rem;">Ý nghĩa</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button class="btn" onclick="fcPrev()">❮ Trước</button>
+                <button class="btn secondary" onclick="fcShuffle()">🔀 Trộn</button>
+                <button class="btn" onclick="fcNext()">Sau ❯</button>
+            </div>
+        </div>
+
+        <div id="quiz" class="tab-content">
+            <h2>Chế độ: Nghe & Viết lại</h2>
+            
+            <div id="quiz-setup">
+                <p style="font-size: 0.9rem;">Chọn từ bạn muốn kiểm tra:</p>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <button class="btn secondary" style="font-size:0.8rem; padding:5px 10px;" onclick="toggleSelect(true)">Chọn hết</button>
+                    <button class="btn" style="font-size:0.8rem; padding:5px 10px; background:#95a5a6;" onclick="toggleSelect(false)">Bỏ chọn</button>
+                </div>
+                <div id="quiz-list" class="word-grid"></div>
+                <button class="btn" style="width:100%; background:#27ae60; margin-top:10px;" onclick="startQuiz()">BẮT ĐẦU KIỂM TRA ▶</button>
+            </div>
+
+            <div id="quiz-run" style="display:none;">
+                <div id="qz-progress" style="color:#7f8c8d; margin-bottom:10px;"></div>
+                <h3 id="qz-meaning" style="color:#2c3e50; font-size: 1.5rem;">Nghĩa tiếng Việt</h3>
+                <p id="qz-type">((n))</p>
+                
+                <button class="btn secondary" id="qz-play-btn" onclick="qzPlay()">🔊 Nghe gợi ý</button>
+                
+                <p style="font-style:italic; font-size:0.9rem; margin-top:15px;">Nhập từ tiếng Anh:</p>
+                <input type="text" id="qz-input" placeholder="..." autocomplete="off">
+                <div id="qz-msg" class="result-msg"></div>
+
+                <div style="display:flex; gap:10px; justify-content:center;">
+                    <button id="qz-check-btn" class="btn" onclick="qzCheck()">Kiểm tra (Enter)</button>
+                    <button id="qz-next-btn" class="btn" style="display:none; background:#27ae60;" onclick="qzNext()">Câu tiếp (Enter)</button>
+                </div>
+                <br>
+                <button class="btn" style="background:#95a5a6; font-size:0.8rem;" onclick="resetQuizSetup()">🔄 Chọn lại list</button>
+            </div>
+        </div>
+
+        <div id="dictionary" class="tab-content">
+            <h2>Danh sách từ vựng</h2>
+            <input type="text" id="dict-search" class="search-box" placeholder="🔍 Tìm kiếm từ vựng..." oninput="dictSearch()">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%">STT</th>
+                            <th width="30%">Từ vựng</th>
+                            <th width="10%">Loại</th>
+                            <th width="30%">Nghĩa</th>
+                            <th width="10%">Nghe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dict-body"></tbody>
+                </table>
+            </div>
+            <p id="dict-count" style="text-align:right; font-style:italic; margin-top:5px;"></p>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DỮ LIỆU TỪ VỰNG (ĐÃ GỘP CŨ + MỚI) ---
+        const vocabularyList = [
+            // 1. Đồ dùng học tập
+            { word: "Watercolor", type: "n", ipa: "/ˈwɑː.t̬ɚˌkʌl.ɚ/", meaning: "Màu nước" },
+            { word: "Thumbtack", type: "n", ipa: "/ˈθʌm.tæk/", meaning: "Đinh ghim" },
+            { word: "Textbook", type: "n", ipa: "/ˈtekst.bʊk/", meaning: "Sách giáo khoa" },
+            { word: "Test Tube", type: "n. phr", ipa: "/ˈtest ˌtuːb/", meaning: "Ống nghiệm" },
+            { word: "Tape measure", type: "n. phr", ipa: "/ˈteɪp ˌmeʒ.ɚ/", meaning: "Thước dây" },
+            { word: "Stencil", type: "n", ipa: "/ˈsten.səl/", meaning: "Giấy nến" },
+            { word: "Stapler", type: "n", ipa: "/ˈsteɪ.plɚ/", meaning: "Đồ dập ghim" },
+            { word: "Staple remover", type: "n. phr", ipa: "/ˈsteɪ.plɚ rɪˈmuː.vɚ/", meaning: "Cái gỡ ghim bấm" },
+            { word: "Scissors", type: "n", ipa: "/ˈsɪz.ɚz/", meaning: "Kéo" },
+            { word: "Ruler", type: "n", ipa: "/ˈruː.lɚ/", meaning: "Thước" },
+            { word: "Protractor", type: "n", ipa: "/prəˈtræk.tɚ/", meaning: "Thước đo góc" },
+            { word: "Post-it note", type: "n. phr", ipa: "/ˈpoʊst.ɪt ˌnoʊt/", meaning: "Giấy nhớ" },
+            { word: "Pencil", type: "n", ipa: "/ˈpen.səl/", meaning: "Bút chì" },
+            { word: "Pencil Sharpener", type: "n. phr", ipa: "/ˈpen.səl ˌʃɑːr.pən.ɚ/", meaning: "Đồ gọt bút chì" },
+            { word: "Pencil Case", type: "n. phr", ipa: "/ˈpen.səl ˌkeɪs/", meaning: "Hộp bút" },
+            { word: "Pen", type: "n", ipa: "/pen/", meaning: "Bút mực" },
+            { word: "Paper", type: "n", ipa: "/ˈpeɪ.pɚ/", meaning: "Giấy" },
+            { word: "Paper Clip", type: "n. phr", ipa: "/ˈpeɪ.pɚ ˌklɪp/", meaning: "Kẹp giấy" },
+            { word: "Notebook", type: "n", ipa: "/ˈnoʊt.bʊk/", meaning: "Cuốn sổ, vở" },
+            { word: "Map", type: "n", ipa: "/mæp/", meaning: "Bản đồ" },
+            { word: "Magnifying Glass", type: "n. phr", ipa: "/ˈmæɡ.nə.faɪ.ɪŋ ˌɡlæs/", meaning: "Kính lúp" },
+            { word: "Highlighter", type: "n", ipa: "/ˈhaɪˌlaɪ.t̬ɚ/", meaning: "Bút đánh dấu màu" },
+            { word: "Glue", type: "n", ipa: "/ɡluː/", meaning: "Keo" },
+            { word: "Globe", type: "n", ipa: "/ɡloʊb/", meaning: "Quả địa cầu" },
+            { word: "Flash card", type: "n. phr", ipa: "/ˈflæʃ ˌkɑːrd/", meaning: "Thẻ ghi nhớ" },
+            { word: "File Holder", type: "n. phr", ipa: "/faɪl ˈhoʊl.dɚ/", meaning: "Tập hồ sơ" },
+            { word: "Rubber", type: "n", ipa: "/ˈrʌb.ɚ/", meaning: "Cục tẩy" },
+            { word: "Duster", type: "n", ipa: "/ˈdʌs.tɚ/", meaning: "Khăn lau bảng" },
+            { word: "Dictionary", type: "n", ipa: "/ˈdɪk.ʃəˌner.i/", meaning: "Từ điển" },
+            { word: "Desk", type: "n", ipa: "/desk/", meaning: "Bàn học" },
+            { word: "Computer", type: "n", ipa: "/kəmˈpjuː.t̬ɚ/", meaning: "Máy tính bàn" },
+            { word: "Compass", type: "n", ipa: "/ˈkʌm.pəs/", meaning: "Com-pa" },
+            { word: "Calculator", type: "n", ipa: "/ˈkæl.kjəˌleɪ.t̬ɚ/", meaning: "Máy tính cầm tay" },
+            { word: "Bookcase", type: "n", ipa: "/ˈbʊk.keɪs/", meaning: "Giá sách" },
+            { word: "Book", type: "n", ipa: "/bʊk/", meaning: "Sách" },
+            { word: "Board", type: "n", ipa: "/bɔːrd/", meaning: "Bảng" },
+            { word: "Backpack", type: "n", ipa: "/ˈbæk.pæk/", meaning: "Ba lô" },
+
+            // 2. Hành động (Action Verbs)
+            { word: "Pack", type: "v", ipa: "/pæk/", meaning: "Bó, gói" },
+            { word: "Paint", type: "v", ipa: "/peɪnt/", meaning: "Quét sơn" },
+            { word: "Paste", type: "v", ipa: "/peɪst/", meaning: "Dán" },
+            { word: "Pick", type: "v", ipa: "/pɪk/", meaning: "Hái, nhổ, chọn" },
+            { word: "Plant", type: "v", ipa: "/plænt/", meaning: "Trồng" },
+            { word: "Play", type: "v", ipa: "/pleɪ/", meaning: "Chơi" },
+            { word: "Point", type: "v", ipa: "/pɔɪnt/", meaning: "Chỉ tay" },
+            { word: "Pour", type: "v", ipa: "/pɔːr/", meaning: "Rót, đổ" },
+            { word: "Pull", type: "v", ipa: "/pʊl/", meaning: "Lôi, kéo" },
+            { word: "Push", type: "v", ipa: "/pʊʃ/", meaning: "Xô, đẩy" },
+            { word: "Rake", type: "v", ipa: "/reɪk/", meaning: "Cào (lá, đất)" },
+            { word: "Read", type: "v", ipa: "/riːd/", meaning: "Đọc" },
+            { word: "Ride", type: "v", ipa: "/raɪd/", meaning: "Đi, cưỡi" },
+            { word: "Row", type: "v", ipa: "/roʊ/", meaning: "Chèo thuyền" },
+            { word: "Run", type: "v", ipa: "/rʌn/", meaning: "Chạy" },
+            { word: "Sail", type: "v", ipa: "/seɪl/", meaning: "Lái (thuyền buồm)" },
+
+            // --- CÁC TỪ MỚI THÊM VÀO (TỪ PDF) ---
+            
+            // 3. Hoạt động thường ngày (Daily Activities)
+            { word: "Brush your teeth", type: "v. phr", ipa: "/brʌʃ jɔːr tiːθ/", meaning: "Đánh răng" },
+            { word: "Buy", type: "v", ipa: "/baɪ/", meaning: "Mua" },
+            { word: "Comb the hair", type: "v. phr", ipa: "/koʊm ðə her/", meaning: "Chải đầu" },
+            { word: "Cook", type: "v", ipa: "/kʊk/", meaning: "Nấu ăn" },
+            { word: "Do exercise", type: "v. phr", ipa: "/duː ˈek.sɚ.saɪz/", meaning: "Tập thể dục" },
+            { word: "Do your homework", type: "v. phr", ipa: "/duː jɔːr ˈhoʊm.wɝːk/", meaning: "Làm bài tập về nhà" },
+            { word: "Eat out", type: "v. phr", ipa: "/iːt aʊt/", meaning: "Đi ăn ở ngoài" },
+            { word: "Feed the dog", type: "v. phr", ipa: "/fiːd ðə dɔːɡ/", meaning: "Cho chó ăn" },
+            { word: "Finish working", type: "v. phr", ipa: "/ˈfɪn.ɪʃ ˈwɝː.kɪŋ/", meaning: "Kết thúc công việc" },
+            { word: "Gardening", type: "v", ipa: "/ˈɡɑːr.dən.ɪŋ/", meaning: "Làm vườn" },
+            { word: "Get dressed", type: "v. phr", ipa: "/ɡet drest/", meaning: "Mặc quần áo" },
+            { word: "Get up", type: "v. phr", ipa: "/ɡet ʌp/", meaning: "Thức dậy" },
+            { word: "Go home", type: "v. phr", ipa: "/ɡoʊ hoʊm/", meaning: "Về nhà" },
+            { word: "Go shopping", type: "v. phr", ipa: "/ɡoʊ ˈʃɑː.pɪŋ/", meaning: "Đi mua sắm" },
+            { word: "Go to bed", type: "v. phr", ipa: "/ɡoʊ tuː bed/", meaning: "Đi ngủ" },
+            { word: "Have a bath", type: "v. phr", ipa: "/hæv ə bæθ/", meaning: "Đi tắm (bồn)" },
+            { word: "Have a nap", type: "v. phr", ipa: "/hæv ə næp/", meaning: "Ngủ ngắn (trưa)" },
+            { word: "Have breakfast", type: "v. phr", ipa: "/hæv ˈbrek.fəst/", meaning: "Ăn sáng" },
+            { word: "Have dinner", type: "v. phr", ipa: "/hæv ˈdɪn.ɚ/", meaning: "Ăn tối" },
+            { word: "Have lunch", type: "v. phr", ipa: "/hæv lʌntʃ/", meaning: "Ăn trưa" },
+            { word: "Have a shower", type: "v. phr", ipa: "/hæv ə ˈʃaʊ.ɚ/", meaning: "Tắm vòi hoa sen" },
+            { word: "Listen to music", type: "v. phr", ipa: "/ˈlɪs.ən tuː ˈmjuː.zɪk/", meaning: "Nghe nhạc" },
+            { word: "Make breakfast", type: "v. phr", ipa: "/meɪk ˈbrek.fəst/", meaning: "Làm bữa sáng" },
+            { word: "Make up", type: "v. phr", ipa: "/meɪk ʌp/", meaning: "Trang điểm" },
+            { word: "Play sports", type: "v. phr", ipa: "/pleɪ spɔːrts/", meaning: "Chơi thể thao" },
+            { word: "Read books", type: "v. phr", ipa: "/riːd bʊks/", meaning: "Đọc sách" },
+            { word: "Relax", type: "v", ipa: "/rɪˈlæks/", meaning: "Thư giãn" },
+            { word: "Shave", type: "v", ipa: "/ʃeɪv/", meaning: "Cạo râu" },
+            { word: "Sleep", type: "v", ipa: "/sliːp/", meaning: "Ngủ" },
+            { word: "Study", type: "v", ipa: "/ˈstʌd.i/", meaning: "Học tập" },
+            { word: "Surf the internet", type: "v. phr", ipa: "/sɝːf ði ˈɪn.tə.net/", meaning: "Lướt mạng" },
+            { word: "Take the rubbish out", type: "v. phr", ipa: "/teɪk ðə ˈrʌb.ɪʃ aʊt/", meaning: "Đi đổ rác" },
+            { word: "Drink", type: "v", ipa: "/drɪŋk/", meaning: "Uống" },
+            { word: "Turn off", type: "phrasal v", ipa: "/tɝːn ɑːf/", meaning: "Tắt" },
+            { word: "Visit your friend", type: "v. phr", ipa: "/ˈvɪz.ɪt jɔːr frend/", meaning: "Thăm bạn bè" },
+            { word: "Wake up", type: "phrasal v", ipa: "/weɪk ʌp/", meaning: "Tỉnh giấc" },
+            { word: "Wash your face", type: "v. phr", ipa: "/wɑːʃ jɔːr feɪs/", meaning: "Rửa mặt" },
+            { word: "Wash the dishes", type: "v. phr", ipa: "/wɑːʃ ðə dɪʃɪz/", meaning: "Rửa chén" },
+            { word: "Watch television", type: "v. phr", ipa: "/wɑːtʃ ˈtel.ə.vɪʒ.ən/", meaning: "Xem tivi" },
+            { word: "Work", type: "v", ipa: "/wɝːk/", meaning: "Làm việc" },
+
+            // 4. Chủ đề Biển (Sea/Ocean)
+            { word: "Sea", type: "n", ipa: "/siː/", meaning: "Biển" },
+            { word: "Ocean", type: "n", ipa: "/ˈoʊ.ʃən/", meaning: "Đại dương" },
+            { word: "Wave", type: "n", ipa: "/weɪv/", meaning: "Sóng" },
+            { word: "Island", type: "n", ipa: "/ˈaɪ.lənd/", meaning: "Hòn đảo" },
+            { word: "Harbor", type: "n", ipa: "/ˈhɑːr.bɚ/", meaning: "Cảng biển" },
+            { word: "Lighthouse", type: "n", ipa: "/ˈlaɪt.haʊs/", meaning: "Hải đăng" },
+            { word: "Submarine", type: "n", ipa: "/ˌsʌb.məˈriːn/", meaning: "Tàu ngầm" },
+            { word: "Ship", type: "n", ipa: "/ʃɪp/", meaning: "Tàu thủy (lớn)" },
+            { word: "Boat", type: "n", ipa: "/boʊt/", meaning: "Thuyền" },
+            { word: "Captain", type: "n", ipa: "/ˈkæp.tən/", meaning: "Thuyền trưởng" },
+            { word: "Fisherman", type: "n", ipa: "/ˈfɪʃ.ɚ.mən/", meaning: "Ngư dân" },
+            { word: "Lifeguard", type: "n", ipa: "/ˈlaɪf.ɡɑːrd/", meaning: "Người cứu hộ" },
+            { word: "Seashore", type: "n", ipa: "/ˈsiː.ʃɔːr/", meaning: "Bờ biển" },
+            { word: "Beach", type: "n", ipa: "/biːtʃ/", meaning: "Bãi biển" },
+            { word: "Coast", type: "n", ipa: "/koʊst/", meaning: "Bờ biển (địa lý)" },
+            { word: "Seagull", type: "n", ipa: "/ˈsiː.ɡʌl/", meaning: "Mòng biển" },
+            { word:
